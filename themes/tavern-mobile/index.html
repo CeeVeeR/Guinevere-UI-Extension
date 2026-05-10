@@ -55,6 +55,19 @@
         </div>
     </div>
 
+    <!-- Lightbox: tap a hero portrait to see the full image -->
+    <div id="tavern-lightbox" class="tavern-lightbox" aria-hidden="true" role="dialog"
+        aria-label="Character portrait">
+        <button id="tavern-lightbox-close" class="tavern-lightbox-close" type="button"
+            aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 5l14 14M19 5L5 19" />
+            </svg>
+        </button>
+        <img id="tavern-lightbox-img" alt="" />
+    </div>
+
     <!-- Persona modal: drops below profile button -->
     <div id="tavern-persona-modal" class="tavern-modal tavern-modal--anchor" aria-hidden="true">
         <div class="tavern-modal-card tavern-modal-card--anchor" role="dialog"

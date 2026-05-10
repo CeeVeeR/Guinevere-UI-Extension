@@ -58,8 +58,10 @@
 	/* Avatar shape — overridden by JS persona tweak */
 	--tm-avatar-radius: 50%;
 
-	/* Hero portrait band height per message */
-	--tm-hero-h: 168px;
+	/* Hero portrait band — taller because most character art is portrait;
+	   `--tm-hero-ratio` lets the band scale with width on narrow screens. */
+	--tm-hero-ratio: 3 / 4;
+	--tm-hero-max-h: 420px;
 
 	/* Animation */
 	--tm-ease: cubic-bezier(.2, .7, .2, 1);
@@ -680,12 +682,17 @@ body.tavern-mobile #chat .mes {
 	right: auto !important;
 }
 
-/* Hero portrait band per message — full width, fixed height */
+/* Hero portrait band per message — full width, portrait aspect so
+   vertical character art has room to breathe (most cards are 3:4 / 2:3).
+   Height is capped to `--tm-hero-max-h` so the band stops eating the
+   screen on tall mobiles; aspect-ratio drives the rest. */
 body.tavern-mobile .mes .mesAvatarWrapper,
 body.tavern-mobile .mes .mes_avatar_wrapper {
 	position: relative !important;
 	width: 100% !important;
-	height: var(--tm-hero-h) !important;
+	height: auto !important;
+	aspect-ratio: var(--tm-hero-ratio) !important;
+	max-height: var(--tm-hero-max-h) !important;
 	min-width: 100% !important;
 	max-width: 100% !important;
 	margin: 0 !important;
@@ -694,26 +701,105 @@ body.tavern-mobile .mes .mes_avatar_wrapper {
 	border-top-right-radius: var(--tm-r-lg);
 	overflow: hidden;
 	box-shadow: inset 0 0 0 1px var(--tm-rule), 0 6px 24px rgba(0, 0, 0, 0.45);
+	background: var(--tm-surface);
 	flex: 0 0 auto !important;
+	cursor: zoom-in;
 }
 
-body.tavern-mobile .mes .avatar {
+/* Defeat ST's avatar circle/squircle masking — the wrapper is the new shape. */
+body.tavern-mobile .mes .avatar,
+body.tavern-mobile .mes .avatar.circle,
+body.tavern-mobile .mes .avatar.square,
+body.tavern-mobile .mes .avatar.rounded,
+body.tavern-mobile .mes .avatar.rectangle {
 	width: 100% !important;
 	height: 100% !important;
 	min-width: 0 !important;
 	min-height: 0 !important;
 	border-radius: 0 !important;
 	border: none !important;
+	clip-path: none !important;
+	mask: none !important;
+	-webkit-mask: none !important;
 	display: block !important;
 	margin: 0 !important;
 	padding: 0 !important;
+	background: transparent !important;
+	overflow: hidden !important;
 }
 
 body.tavern-mobile .mes .avatar img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	display: block;
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover !important;
+	object-position: center top !important;
+	border-radius: 0 !important;
+	clip-path: none !important;
+	mask: none !important;
+	-webkit-mask: none !important;
+	display: block !important;
+	transition: transform 240ms var(--tm-ease);
+}
+
+body.tavern-mobile .mes .mesAvatarWrapper:hover .avatar img {
+	transform: scale(1.02);
+}
+
+/* Tap-to-expand lightbox. JS adds `.is-open` and the portrait <img>. */
+.tavern-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 1200;
+	background: rgba(0, 0, 0, 0.92);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: var(--tm-s-4);
+	opacity: 0;
+	transition: opacity 200ms var(--tm-ease);
+	cursor: zoom-out;
+}
+
+.tavern-lightbox.is-open {
+	display: flex;
+	opacity: 1;
+}
+
+.tavern-lightbox img {
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	border-radius: var(--tm-r-lg);
+	box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+	transform: scale(0.96);
+	transition: transform 240ms var(--tm-ease);
+}
+
+.tavern-lightbox.is-open img {
+	transform: scale(1);
+}
+
+.tavern-lightbox-close {
+	position: absolute;
+	top: max(var(--tm-s-4), env(safe-area-inset-top));
+	right: max(var(--tm-s-4), env(safe-area-inset-right));
+	width: var(--tm-h-std);
+	height: var(--tm-h-std);
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0.6);
+	border: 1px solid var(--tm-rule-bright);
+	color: var(--tm-ink);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.tavern-lightbox-close svg {
+	width: 20px;
+	height: 20px;
 }
 
 /* User-banner cue: chevron hint that it's tappable for persona switching */

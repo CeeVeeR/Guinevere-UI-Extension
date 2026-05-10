@@ -269,6 +269,41 @@ function hidePersonaModal() {
 }
 
 /* ──────────────────────────────────────────────────────────────────
+ * Lightbox — tap a non-user hero portrait to view the full image.
+ * Animates in/out via CSS `.is-open`. ESC + backdrop click both close.
+ * ────────────────────────────────────────────────────────────────── */
+
+function openLightbox(src, alt) {
+	const $lb = HTML_CONTAINER.find("#tavern-lightbox");
+	const $img = HTML_CONTAINER.find("#tavern-lightbox-img");
+	if (!src) return;
+	$img.attr("src", src);
+	$img.attr("alt", alt || "");
+	$lb.attr("aria-hidden", "false");
+	// Defer the class so the transition has a starting state to interpolate from.
+	requestAnimationFrame(() => $lb.addClass("is-open"));
+}
+
+function closeLightbox() {
+	const $lb = HTML_CONTAINER.find("#tavern-lightbox");
+	$lb.removeClass("is-open");
+	$lb.attr("aria-hidden", "true");
+	// Clear src after the fade so we don't flash the previous image next open.
+	window.setTimeout(() => HTML_CONTAINER.find("#tavern-lightbox-img").attr("src", ""), 220);
+}
+
+function onPortraitTap(e) {
+	const $mes = $(e.currentTarget).closest(".mes");
+	if (!$mes.length) return;
+	// User-message banners are claimed by the persona switcher.
+	if ($mes.attr("is_user") === "true") return;
+	const src = $mes.find(".avatar img").attr("src");
+	const alt = $mes.find(".ch_name .name_text").text() || "Portrait";
+	e.stopPropagation();
+	openLightbox(src, alt);
+}
+
+/* ──────────────────────────────────────────────────────────────────
  * Generation state — show/hide the floating Stop button.
  * ────────────────────────────────────────────────────────────────── */
 
@@ -414,6 +449,19 @@ export async function execute() {
 		$(document).on("click.tavernMobile", `.${BODY_CLASS} .mes[is_user="true"] .mesAvatarWrapper`, (e) => {
 			e.stopPropagation();
 			togglePersonaModal();
+		});
+		// Delegated: tap any character hero portrait → open the lightbox.
+		$(document).on("click.tavernMobile", `.${BODY_CLASS} .mes:not([is_user="true"]) .mesAvatarWrapper`, onPortraitTap);
+		// Lightbox dismissal — backdrop, close button, and ESC.
+		HTML_CONTAINER.find("#tavern-lightbox").on("click", (e) => {
+			if (e.target === e.currentTarget || $(e.target).closest("#tavern-lightbox-close").length) {
+				closeLightbox();
+			}
+		});
+		$(document).on("keydown.tavernMobile", (e) => {
+			if (e.key === "Escape" && HTML_CONTAINER.find("#tavern-lightbox").hasClass("is-open")) {
+				closeLightbox();
+			}
 		});
 		HTML_CONTAINER.find("#tavern-persona-manage").on("click", () => {
 			hidePersonaModal();
