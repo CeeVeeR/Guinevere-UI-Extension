@@ -639,7 +639,10 @@ body.tavern-mobile #top-settings-holder {
 
 /* Force `#sheld` full-width — overrides ST's --sheldWidth (50vw default).
    `!important` is unavoidable here: ST's base style.css uses
-   `width: var(--sheldWidth)` and we need to defeat that var entirely. */
+   `width: var(--sheldWidth)` and we need to defeat that var entirely.
+   Flex column so #chat scrolls and #form_sheld stays pinned to the bottom
+   on mobile, where ST's mobile-styles.css would otherwise let the form
+   float to the top of #sheld. */
 body.tavern-mobile #sheld {
 	background: var(--tm-bg) !important;
 	border: none !important;
@@ -655,16 +658,39 @@ body.tavern-mobile #sheld {
 	margin: 0 !important;
 	height: auto !important;
 	position: fixed !important;
+	display: flex !important;
+	flex-direction: column !important;
 }
 
 body.tavern-mobile #chat {
 	background: var(--tm-bg) !important;
 	padding: var(--tm-s-3) var(--tm-s-4) var(--tm-s-4) !important;
 	max-width: 720px !important;
+	width: 100% !important;
 	margin: 0 auto !important;
+	flex: 1 1 auto !important;
+	min-height: 0 !important;
+	overflow-y: auto !important;
 	scroll-behavior: smooth;
 	-webkit-overflow-scrolling: touch;
 	overscroll-behavior: contain;
+}
+
+/* Composer pinned to the bottom of #sheld — flex order does the work;
+   we just neutralize ST's mobile rules that absolute-position the form. */
+body.tavern-mobile #form_sheld {
+	flex: 0 0 auto !important;
+	position: static !important;
+	bottom: auto !important;
+	top: auto !important;
+	left: auto !important;
+	right: auto !important;
+	transform: none !important;
+	background: var(--tm-bg) !important;
+	width: 100% !important;
+	max-width: 720px !important;
+	margin: 0 auto !important;
+	z-index: 5 !important;
 }
 
 body.tavern-mobile #chat .last_mes,
@@ -819,20 +845,26 @@ body.tavern-mobile .mes[is_user="true"] .mesAvatarWrapper {
 	cursor: pointer;
 }
 
-/* Bubble header — name + tag, accent-dotted */
+/* Bubble header — keep ST's native .ch_name flex structure so the row
+   continues to host swipe counters and edit buttons; style only the
+   actual name span so the character name always renders. */
 body.tavern-mobile .mes .ch_name {
-	display: flex;
+	margin: 0 0 var(--tm-s-2) !important;
+	padding: 0 !important;
+	color: var(--tm-ink);
+}
+
+body.tavern-mobile .mes .name_text {
+	display: inline-flex;
 	align-items: center;
 	gap: var(--tm-s-2);
-	margin: 0 0 var(--tm-s-2);
-	padding: 0;
-	color: var(--tm-ink);
 	font-size: var(--tm-fs-h1);
 	font-weight: 800;
 	letter-spacing: -0.02em;
+	color: var(--tm-ink);
 }
 
-body.tavern-mobile .mes .ch_name::before {
+body.tavern-mobile .mes .name_text::before {
 	content: "";
 	width: 6px;
 	height: 6px;
@@ -842,11 +874,11 @@ body.tavern-mobile .mes .ch_name::before {
 	flex-shrink: 0;
 }
 
-body.tavern-mobile .mes[is_user="true"] .ch_name {
+body.tavern-mobile .mes[is_user="true"] .name_text {
 	color: var(--tm-accent-ink);
 }
 
-body.tavern-mobile .mes[is_user="true"] .ch_name::before {
+body.tavern-mobile .mes[is_user="true"] .name_text::before {
 	background: var(--tm-accent-ink);
 	box-shadow: none;
 }
