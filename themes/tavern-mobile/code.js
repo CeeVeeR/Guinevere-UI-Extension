@@ -28,17 +28,19 @@ const BODY_CLASS = "tavern-mobile";
  */
 const RELOCATED_DRAWERS = {};
 
-/* Feature menu — mirrors the design's nested menu. Each entry routes either
- * to a relocated ST drawer (`drawer:<id>`) or to a known DOM trigger. */
+/* Feature menu — mirrors the design's nested menu.
+ * `key` references the wrapper `id` on a `.drawer` under #top-settings-holder;
+ * `relocateDrawers()` keys RELOCATED_DRAWERS by that wrapper id. */
 const MENU_ITEMS = [
-	{ key: "drawer:rm_button_characters", icon: "users",    label: "Cast",        sub: "characters in play" },
-	{ key: "drawer:WorldInfo",            icon: "archive",  label: "Lorebook",    sub: "world facts" },
-	{ key: "drawer:user-settings-block",  icon: "user",     label: "Personas",    sub: "switch yourself" },
-	{ key: "drawer:rm_api_block",         icon: "plug",     label: "Connection",  sub: "API · model" },
-	{ key: "drawer:advanced-formatting-button", icon: "wand", label: "Formatting", sub: "regex · macros" },
-	{ key: "drawer:logo_block",           icon: "settings", label: "User",        sub: "preferences" },
-	{ key: "drawer:sys-settings-button",  icon: "sliders",  label: "Sampling",    sub: "temp · top-p" },
-	{ key: "drawer:extensions-settings-button", icon: "bolt", label: "Extensions", sub: "third-party tools" },
+	{ key: "drawer:rightNavHolder",             icon: "users",    label: "Cast",        sub: "characters in play" },
+	{ key: "drawer:WI-SP-button",               icon: "archive",  label: "Lorebook",    sub: "world facts" },
+	{ key: "drawer:persona-management-button",  icon: "user",     label: "Personas",    sub: "switch yourself" },
+	{ key: "drawer:sys-settings-button",        icon: "plug",     label: "Connection",  sub: "API · model" },
+	{ key: "drawer:advanced-formatting-button", icon: "wand",     label: "Formatting",  sub: "regex · macros" },
+	{ key: "drawer:user-settings-button",       icon: "settings", label: "User",        sub: "preferences" },
+	{ key: "drawer:ai-config-button",           icon: "sliders",  label: "Sampling",    sub: "temp · top-p" },
+	{ key: "drawer:extensions-settings-button", icon: "bolt",     label: "Extensions",  sub: "third-party tools" },
+	{ key: "drawer:backgrounds-button",         icon: "image",    label: "Background",  sub: "scene art" },
 ];
 
 /* Inline-svg icons. Stroked, currentColor — match style.css token sizes. */
@@ -51,6 +53,7 @@ const ICONS = {
 	settings: "M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6 M19 12l2-1.5-1-2.5-2.5.5-1.5-1.5.5-2.5L14 3l-2 1.5L10 3 8 4.5 8.5 7 7 8.5 4.5 8 3 10l1.5 2L3 14l1 2.5 2.5-.5L8 17.5 7.5 20 10 21l2-1.5L14 21l2-1.5-.5-2.5L17 15.5l2.5.5L21 14l-2-2z",
 	sliders:  "M4 6h10 M18 6h2 M4 12h2 M10 12h10 M4 18h14 M18 18h2",
 	bolt:     "M13 2L3 14h7l-1 8 10-12h-7z",
+	image:    "M4 4h16v16H4z M4 16l5-5 4 4 3-3 4 4",
 	chevron:  "M9 6l6 6-6 6",
 	chevL:    "M15 6l-6 6 6 6",
 	regen:    "M4 4v6h6 M20 20v-6h-6 M5 14a8 8 0 0 0 14 4 M19 10a8 8 0 0 0-14-4",
