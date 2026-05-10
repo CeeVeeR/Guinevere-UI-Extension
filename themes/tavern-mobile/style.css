@@ -1,0 +1,1115 @@
+/* Tavern Mobile — AMOLED roleplay theme.
+   Design system tokens live on :root so they cascade into every override.
+   No magic numbers in component rules: read tokens or fail loudly. */
+
+:root {
+	/* Surfaces (warm tints lift off true black) */
+	--tm-bg: #000;
+	--tm-surface: #120c08;
+	--tm-surface-2: #1c140e;
+	--tm-surface-3: #281c14;
+
+	/* Text */
+	--tm-ink: #fef6ec;
+	--tm-ink-2: #c5b6a4;
+	--tm-ink-3: #80715f;
+
+	/* Rules */
+	--tm-rule: rgba(255, 220, 180, 0.10);
+	--tm-rule-bright: rgba(255, 220, 180, 0.22);
+
+	/* Accents */
+	--tm-accent: #c97a8e;
+	--tm-accent-ink: #1a0c10;
+	--tm-warn: #ff9d6c;
+	--tm-ok: #9ad682;
+	--tm-danger: #b04848;
+
+	/* Touch targets */
+	--tm-h-chip: 36px;
+	--tm-h-std: 44px;
+	--tm-h-primary: 56px;
+
+	/* Radii */
+	--tm-r-sm: 8px;
+	--tm-r-md: 12px;
+	--tm-r-lg: 16px;
+	--tm-r-xl: 20px;
+	--tm-r-pill: 999px;
+
+	/* Spacing scale (4·8·12·16·20·24·32) */
+	--tm-s-1: 4px;
+	--tm-s-2: 8px;
+	--tm-s-3: 12px;
+	--tm-s-4: 16px;
+	--tm-s-5: 20px;
+	--tm-s-6: 24px;
+	--tm-s-7: 32px;
+
+	/* Type ramp (calc lets font-scale tweak move all sizes together) */
+	--tm-fs: 1;
+	--tm-fs-micro: calc(11px * var(--tm-fs));
+	--tm-fs-meta: calc(12px * var(--tm-fs));
+	--tm-fs-label: calc(13px * var(--tm-fs));
+	--tm-fs-body: calc(16px * var(--tm-fs));
+	--tm-fs-title: calc(17px * var(--tm-fs));
+	--tm-fs-h1: calc(22px * var(--tm-fs));
+
+	/* Avatar shape — overridden by JS persona tweak */
+	--tm-avatar-radius: 50%;
+
+	/* Hero portrait band height per message */
+	--tm-hero-h: 168px;
+
+	/* Animation */
+	--tm-ease: cubic-bezier(.2, .7, .2, 1);
+	--tm-dur: 180ms;
+
+	/* Body font */
+	--tm-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--tm-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Recolor ST's own custom props so legacy chrome blends in */
+body.tavern-mobile {
+	--main_text_color: var(--tm-ink);
+	--quote_text_color: var(--tm-ink-2);
+	--italics_text_color: var(--tm-ink-2);
+	--background_color: var(--tm-bg);
+	--border_color: var(--tm-rule);
+	--SmartThemeBodyColor: var(--tm-ink);
+	--SmartThemeQuoteColor: var(--tm-ink-2);
+	--SmartThemeUnderlineColor: var(--tm-accent);
+	background: var(--tm-bg);
+	color: var(--tm-ink);
+	font-family: var(--tm-body);
+}
+
+/* ---------- Container reset (only when theme is active) ---------- */
+
+#tavern-mobile-container {
+	font-family: var(--tm-body);
+	color: var(--tm-ink);
+	font-size: var(--tm-fs-body);
+}
+
+#tavern-mobile-container *,
+#tavern-mobile-container *::before,
+#tavern-mobile-container *::after {
+	box-sizing: border-box;
+}
+
+#tavern-mobile-container button {
+	font-family: inherit;
+	-webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Top bar (replaces #top-bar / #top-settings-holder) ---------- */
+
+.tavern-topbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1001;
+	display: flex;
+	align-items: center;
+	gap: var(--tm-s-2);
+	height: 56px;
+	padding: 0 var(--tm-s-2);
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0.82));
+	border-bottom: 1px solid var(--tm-rule);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.tavern-topbar-title {
+	flex: 1;
+	min-width: 0;
+}
+
+.tavern-title {
+	font-size: var(--tm-fs-title);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	color: var(--tm-ink);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tavern-subtitle {
+	font-size: var(--tm-fs-meta);
+	color: var(--tm-ink-2);
+	margin-top: 1px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tavern-subtitle:empty {
+	display: none;
+}
+
+/* ---------- Icon-only button (single primitive, all sizes via vars) ---------- */
+
+.tavern-iconbtn {
+	width: var(--tm-h-std);
+	height: var(--tm-h-std);
+	border-radius: var(--tm-r-md);
+	background: transparent;
+	border: 1px solid transparent;
+	color: var(--tm-ink);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	flex-shrink: 0;
+	padding: 0;
+	transition: background var(--tm-dur) var(--tm-ease),
+		border-color var(--tm-dur) var(--tm-ease),
+		transform 80ms var(--tm-ease);
+}
+
+.tavern-iconbtn:hover {
+	background: var(--tm-surface-2);
+}
+
+.tavern-iconbtn:active {
+	transform: translateY(1px);
+}
+
+.tavern-iconbtn[aria-expanded="true"] {
+	background: var(--tm-surface-3);
+	border-color: var(--tm-rule-bright);
+}
+
+.tavern-iconbtn svg {
+	width: 22px;
+	height: 22px;
+}
+
+/* Profile button — round, persona avatar fills it */
+.tavern-profile {
+	overflow: hidden;
+	background: var(--tm-surface-2);
+	border-color: var(--tm-rule);
+}
+
+.tavern-profile img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: inherit;
+}
+
+.tavern-profile img:not([src]),
+.tavern-profile img[src=""] {
+	display: none;
+}
+
+/* Burger animates to X when expanded */
+.tavern-burger-bars {
+	position: relative;
+	width: 20px;
+	height: 14px;
+	display: inline-block;
+}
+
+.tavern-burger-bars span {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: currentColor;
+	border-radius: 1px;
+	transition: transform var(--tm-dur) var(--tm-ease),
+		top var(--tm-dur) var(--tm-ease),
+		opacity var(--tm-dur) var(--tm-ease);
+}
+
+.tavern-burger-bars span:nth-child(1) { top: 0; }
+.tavern-burger-bars span:nth-child(2) { top: 6px; }
+.tavern-burger-bars span:nth-child(3) { top: 12px; }
+
+[aria-expanded="true"] .tavern-burger-bars span:nth-child(1) {
+	top: 6px;
+	transform: rotate(45deg);
+}
+
+[aria-expanded="true"] .tavern-burger-bars span:nth-child(2) {
+	opacity: 0;
+}
+
+[aria-expanded="true"] .tavern-burger-bars span:nth-child(3) {
+	top: 6px;
+	transform: rotate(-45deg);
+}
+
+/* ---------- Nested menu (RP tools grid) ---------- */
+
+.tavern-menu {
+	position: fixed;
+	top: 56px;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	background: var(--tm-bg);
+	border-bottom: 1px solid var(--tm-rule);
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height var(--tm-dur) var(--tm-ease);
+}
+
+.tavern-menu[aria-hidden="false"] {
+	max-height: 60vh;
+	overflow-y: auto;
+}
+
+.tavern-menu-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--tm-s-2);
+	padding: var(--tm-s-3);
+}
+
+.tavern-menu-item {
+	display: flex;
+	align-items: center;
+	gap: var(--tm-s-2);
+	min-height: 52px;
+	padding: var(--tm-s-2) var(--tm-s-3);
+	background: var(--tm-surface-2);
+	border: 1px solid var(--tm-rule);
+	border-radius: var(--tm-r-md);
+	color: var(--tm-ink);
+	cursor: pointer;
+	text-align: left;
+}
+
+.tavern-menu-item:hover {
+	border-color: var(--tm-rule-bright);
+	background: var(--tm-surface-3);
+}
+
+.tavern-menu-item-icon {
+	width: 32px;
+	height: 32px;
+	border-radius: var(--tm-r-sm);
+	background: var(--tm-surface-3);
+	color: var(--tm-ink-2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.tavern-menu-item-icon svg {
+	width: 16px;
+	height: 16px;
+}
+
+.tavern-menu-item-text {
+	min-width: 0;
+}
+
+.tavern-menu-item-label {
+	font-size: var(--tm-fs-label);
+	font-weight: 600;
+	color: var(--tm-ink);
+}
+
+.tavern-menu-item-sub {
+	font-size: var(--tm-fs-meta);
+	color: var(--tm-ink-3);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* ---------- Settings modal (holds relocated ST drawers) ---------- */
+
+.tavern-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 1100;
+	background: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(2px);
+	-webkit-backdrop-filter: blur(2px);
+	display: none;
+	align-items: flex-end;
+	justify-content: center;
+}
+
+.tavern-modal[aria-hidden="false"] {
+	display: flex;
+}
+
+.tavern-modal-card {
+	width: 100%;
+	max-width: 720px;
+	max-height: 92vh;
+	background: var(--tm-bg);
+	border-top-left-radius: 26px;
+	border-top-right-radius: 26px;
+	border-top: 1px solid var(--tm-rule-bright);
+	box-shadow: 0 -16px 32px rgba(0, 0, 0, 0.5);
+	display: flex;
+	flex-direction: column;
+	padding: var(--tm-s-3) var(--tm-s-4) var(--tm-s-5);
+}
+
+.tavern-modal-card::before {
+	content: "";
+	width: 44px;
+	height: 5px;
+	border-radius: 3px;
+	background: var(--tm-surface-3);
+	align-self: center;
+	margin-bottom: var(--tm-s-3);
+}
+
+.tavern-modal-head {
+	display: flex;
+	align-items: center;
+	gap: var(--tm-s-2);
+	margin-bottom: var(--tm-s-3);
+}
+
+.tavern-modal-title {
+	flex: 1;
+	margin: 0;
+	font-size: var(--tm-fs-h1);
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	color: var(--tm-ink);
+}
+
+.tavern-modal-body {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: var(--tm-s-3);
+	overflow: hidden;
+	min-height: 0;
+}
+
+/* Tab strip — horizontal scroll on mobile */
+.tavern-settings-tabs {
+	display: flex;
+	gap: var(--tm-s-2);
+	overflow-x: auto;
+	scrollbar-width: none;
+	flex-shrink: 0;
+	padding-bottom: var(--tm-s-1);
+}
+
+.tavern-settings-tabs::-webkit-scrollbar {
+	display: none;
+}
+
+.tavern-settings-tabs .drawer-toggle {
+	flex-shrink: 0;
+	height: var(--tm-h-std);
+	padding: 0 var(--tm-s-3);
+	border-radius: var(--tm-r-pill);
+	background: var(--tm-surface-2);
+	border: 1px solid var(--tm-rule);
+	color: var(--tm-ink-2);
+	font-weight: 600;
+	font-size: var(--tm-fs-label);
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--tm-s-1);
+}
+
+.tavern-settings-tabs .drawer-toggle .openIcon {
+	color: var(--tm-accent);
+}
+
+.tavern-settings-tabs .drawer-toggle:has(.openIcon) {
+	background: color-mix(in oklab, var(--tm-accent) 14%, transparent);
+	border-color: var(--tm-accent);
+	color: var(--tm-accent);
+}
+
+.tavern-settings-pane {
+	flex: 1;
+	overflow-y: auto;
+	min-height: 0;
+	-webkit-overflow-scrolling: touch;
+	padding-right: var(--tm-s-1);
+}
+
+/* Hide every relocated drawer pane by default; JS toggles `is-active` */
+.tavern-settings-pane > .drawer-content {
+	display: none;
+	background: transparent;
+	border: none;
+	position: static;
+	width: auto;
+	max-width: none;
+	max-height: none;
+	box-shadow: none;
+	padding: 0;
+	color: var(--tm-ink);
+}
+
+.tavern-settings-pane > .drawer-content.is-active {
+	display: block;
+}
+
+/* ---------- Persona modal (anchored under profile button) ---------- */
+
+.tavern-modal--anchor {
+	background: transparent;
+	pointer-events: none;
+	align-items: flex-start;
+	justify-content: flex-end;
+}
+
+.tavern-modal--anchor[aria-hidden="false"] {
+	pointer-events: auto;
+}
+
+.tavern-modal--anchor::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	pointer-events: auto;
+}
+
+.tavern-modal-card--anchor {
+	position: relative;
+	z-index: 1;
+	margin: 64px var(--tm-s-2) 0 auto;
+	width: min(320px, calc(100vw - var(--tm-s-3)));
+	max-height: 70vh;
+	border-radius: var(--tm-r-lg);
+	border-top-left-radius: var(--tm-r-lg);
+	border-top-right-radius: var(--tm-r-lg);
+	border: 1px solid var(--tm-rule-bright);
+	background: var(--tm-surface);
+	padding: var(--tm-s-2);
+	box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+.tavern-modal-card--anchor::before {
+	display: none;
+}
+
+.tavern-eyebrow {
+	font-size: var(--tm-fs-micro);
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--tm-ink-3);
+}
+
+.tavern-persona-head {
+	padding: var(--tm-s-2) var(--tm-s-3) var(--tm-s-1);
+}
+
+.tavern-persona-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	max-height: 50vh;
+	overflow-y: auto;
+}
+
+.tavern-persona-item {
+	display: flex;
+	align-items: center;
+	gap: var(--tm-s-2);
+	padding: var(--tm-s-2);
+	border-radius: var(--tm-r-sm);
+	cursor: pointer;
+	color: var(--tm-ink);
+	background: transparent;
+	border: none;
+	width: 100%;
+	text-align: left;
+}
+
+.tavern-persona-item:hover {
+	background: var(--tm-surface-2);
+}
+
+.tavern-persona-item[aria-selected="true"] {
+	background: var(--tm-surface-3);
+}
+
+.tavern-persona-item img,
+.tavern-persona-item .tavern-persona-fallback {
+	width: 32px;
+	height: 32px;
+	border-radius: var(--tm-avatar-radius);
+	object-fit: cover;
+	flex-shrink: 0;
+	background: var(--tm-surface-3);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-family: var(--tm-mono);
+	font-size: 12px;
+	color: var(--tm-ink-2);
+}
+
+.tavern-persona-item-text {
+	min-width: 0;
+	flex: 1;
+}
+
+.tavern-persona-item-name {
+	font-size: var(--tm-fs-label);
+	font-weight: 600;
+	color: var(--tm-ink);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tavern-persona-item-tag {
+	font-size: var(--tm-fs-meta);
+	color: var(--tm-ink-3);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tavern-persona-active-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--tm-accent);
+	flex-shrink: 0;
+}
+
+.tavern-link-btn {
+	width: 100%;
+	margin-top: var(--tm-s-1);
+	padding: var(--tm-s-2);
+	background: transparent;
+	border: none;
+	border-top: 1px solid var(--tm-rule);
+	border-radius: 0;
+	color: var(--tm-ink-2);
+	font-size: var(--tm-fs-label);
+	font-weight: 600;
+	cursor: pointer;
+	text-align: left;
+}
+
+.tavern-link-btn:hover {
+	color: var(--tm-ink);
+}
+
+/* ---------- Chat surface restyle (#sheld / #chat / .mes) ---------- */
+
+body.tavern-mobile #top-bar,
+body.tavern-mobile #top-settings-holder {
+	display: none !important;
+}
+
+body.tavern-mobile #sheld {
+	background: var(--tm-bg);
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	top: 56px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	max-width: none;
+	max-height: none;
+	margin: 0;
+	height: auto;
+}
+
+body.tavern-mobile #chat {
+	background: var(--tm-bg);
+	padding: var(--tm-s-3) var(--tm-s-4) var(--tm-s-4);
+	scroll-behavior: smooth;
+	-webkit-overflow-scrolling: touch;
+	overscroll-behavior: contain;
+}
+
+body.tavern-mobile #chat .last_mes,
+body.tavern-mobile #chat .mes {
+	background: transparent;
+	border: none;
+	margin: 0 0 var(--tm-s-6);
+	padding: 0;
+	color: var(--tm-ink);
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+/* Hero portrait band per message — full width, fixed height */
+body.tavern-mobile .mes .mesAvatarWrapper,
+body.tavern-mobile .mes .mes_avatar_wrapper {
+	position: relative;
+	width: 100%;
+	height: var(--tm-hero-h);
+	margin: 0;
+	padding: 0;
+	border-top-left-radius: var(--tm-r-lg);
+	border-top-right-radius: var(--tm-r-lg);
+	overflow: hidden;
+	box-shadow: inset 0 0 0 1px var(--tm-rule), 0 6px 24px rgba(0, 0, 0, 0.45);
+	flex: 0 0 auto;
+}
+
+body.tavern-mobile .mes .avatar {
+	width: 100% !important;
+	height: 100% !important;
+	border-radius: 0 !important;
+	border: none !important;
+	display: block;
+	margin: 0;
+}
+
+body.tavern-mobile .mes .avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+/* User-banner cue: chevron hint that it's tappable for persona switching */
+body.tavern-mobile .mes[is_user="true"] .mesAvatarWrapper::after {
+	content: "";
+	position: absolute;
+	right: var(--tm-s-3);
+	top: var(--tm-s-3);
+	width: 28px;
+	height: 28px;
+	border-radius: var(--tm-r-sm);
+	background: rgba(0, 0, 0, 0.45);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+body.tavern-mobile .mes[is_user="true"] .mesAvatarWrapper {
+	cursor: pointer;
+}
+
+/* Bubble header — name + tag, accent-dotted */
+body.tavern-mobile .mes .ch_name {
+	display: flex;
+	align-items: center;
+	gap: var(--tm-s-2);
+	margin: 0 0 var(--tm-s-2);
+	padding: 0;
+	color: var(--tm-ink);
+	font-size: var(--tm-fs-h1);
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+body.tavern-mobile .mes .ch_name::before {
+	content: "";
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--tm-accent);
+	box-shadow: 0 0 8px var(--tm-accent);
+	flex-shrink: 0;
+}
+
+body.tavern-mobile .mes[is_user="true"] .ch_name {
+	color: var(--tm-accent-ink);
+}
+
+body.tavern-mobile .mes[is_user="true"] .ch_name::before {
+	background: var(--tm-accent-ink);
+	box-shadow: none;
+}
+
+/* Hide ST's chrome that doesn't fit (timestamp, edit IDs, etc.) */
+body.tavern-mobile .mes .timestamp,
+body.tavern-mobile .mes .mesIDDisplay {
+	display: none;
+}
+
+/* Bubble below the hero — full width, flush, dark surface */
+body.tavern-mobile .mes .mes_block {
+	background: var(--tm-surface-2);
+	border: 1px solid var(--tm-rule);
+	border-top: none;
+	border-bottom-left-radius: var(--tm-r-lg);
+	border-bottom-right-radius: var(--tm-r-lg);
+	padding: var(--tm-s-3) var(--tm-s-4);
+	margin: 0;
+	color: var(--tm-ink);
+	box-shadow: inset 0 1px 0 rgba(255, 235, 200, 0.04),
+		inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+}
+
+body.tavern-mobile .mes[is_user="true"] .mes_block {
+	background: linear-gradient(180deg, var(--tm-accent) 0%,
+		color-mix(in oklab, var(--tm-accent) 90%, #000) 100%);
+	border-color: transparent;
+	color: var(--tm-accent-ink);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.20),
+		inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+}
+
+body.tavern-mobile .mes[is_user="true"] .mes_text {
+	color: inherit;
+}
+
+body.tavern-mobile .mes[is_user="true"] .mes_text q,
+body.tavern-mobile .mes[is_user="true"] .mes_text em,
+body.tavern-mobile .mes[is_user="true"] .mes_text i {
+	color: rgba(26, 12, 16, 0.7);
+}
+
+body.tavern-mobile .mes_text {
+	font-size: var(--tm-fs-body);
+	line-height: 1.55;
+	font-weight: 400;
+	color: var(--tm-ink);
+	word-break: break-word;
+}
+
+body.tavern-mobile .mes_text q {
+	color: var(--tm-ink);
+	quotes: "\201C" "\201D" "\2018" "\2019";
+}
+
+body.tavern-mobile .mes_text em,
+body.tavern-mobile .mes_text i {
+	color: var(--tm-ink-2);
+	font-style: italic;
+}
+
+/* Native message buttons → 36px chip row, icon-only */
+body.tavern-mobile .mes_buttons,
+body.tavern-mobile .mes_edit_buttons {
+	display: flex;
+	gap: var(--tm-s-1);
+	margin-top: var(--tm-s-2);
+	padding: 0;
+	flex-wrap: wrap;
+}
+
+body.tavern-mobile .mes_button,
+body.tavern-mobile .mes_edit_buttons div {
+	width: var(--tm-h-chip);
+	height: var(--tm-h-chip);
+	border-radius: var(--tm-r-sm);
+	background: var(--tm-surface-2);
+	border: 1px solid var(--tm-rule);
+	color: var(--tm-ink-2);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 15px;
+	cursor: pointer;
+	margin: 0;
+}
+
+body.tavern-mobile .mes_button:hover {
+	color: var(--tm-ink);
+	border-color: var(--tm-rule-bright);
+}
+
+/* Inline action chips (Continue / Regenerate / branch) injected by JS */
+.tavern-inline-actions {
+	display: flex;
+	gap: var(--tm-s-1);
+	align-items: center;
+	flex-wrap: wrap;
+	margin-top: var(--tm-s-2);
+}
+
+.tavern-chip {
+	height: var(--tm-h-chip);
+	padding: 0 var(--tm-s-3);
+	border-radius: var(--tm-r-md);
+	background: var(--tm-surface-2);
+	border: 1px solid var(--tm-rule);
+	color: var(--tm-ink);
+	font-size: var(--tm-fs-label);
+	font-weight: 600;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--tm-s-1);
+}
+
+.tavern-chip:hover {
+	border-color: var(--tm-rule-bright);
+}
+
+.tavern-chip--primary {
+	background: linear-gradient(180deg, var(--tm-accent) 0%,
+		color-mix(in oklab, var(--tm-accent) 86%, #000) 100%);
+	border-color: transparent;
+	color: var(--tm-accent-ink);
+	font-weight: 700;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.30),
+		inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+}
+
+.tavern-chip svg {
+	width: 14px;
+	height: 14px;
+}
+
+.tavern-branch-stepper {
+	height: var(--tm-h-chip);
+	border-radius: var(--tm-r-md);
+	background: var(--tm-surface-2);
+	border: 1px solid var(--tm-rule);
+	display: inline-flex;
+	align-items: stretch;
+	overflow: hidden;
+}
+
+.tavern-branch-stepper button {
+	width: 28px;
+	background: transparent;
+	border: none;
+	color: var(--tm-ink-2);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.tavern-branch-stepper button:hover {
+	color: var(--tm-ink);
+}
+
+.tavern-branch-stepper-count {
+	font-family: var(--tm-mono);
+	font-size: var(--tm-fs-meta);
+	color: var(--tm-ink);
+	align-self: center;
+	padding: 0 var(--tm-s-1);
+	min-width: 30px;
+	text-align: center;
+}
+
+/* Choice buttons under AI replies (1.X / 2.X / …) */
+.tavern-choices {
+	margin-top: var(--tm-s-2);
+	display: flex;
+	flex-direction: column;
+	gap: var(--tm-s-2);
+}
+
+.tavern-choices-eyebrow {
+	font-size: var(--tm-fs-micro);
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--tm-ink-3);
+}
+
+.tavern-choice {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--tm-s-3);
+	padding: var(--tm-s-3) var(--tm-s-4);
+	border-radius: var(--tm-r-md);
+	width: 100%;
+	background: var(--tm-surface-2);
+	border: 1px solid var(--tm-rule);
+	color: var(--tm-ink);
+	cursor: pointer;
+	text-align: left;
+	min-height: 56px;
+	font: inherit;
+	transition: background var(--tm-dur) var(--tm-ease),
+		border-color var(--tm-dur) var(--tm-ease),
+		transform 80ms var(--tm-ease);
+}
+
+.tavern-choice:hover {
+	border-color: var(--tm-accent);
+}
+
+.tavern-choice:active {
+	transform: translateY(1px);
+}
+
+.tavern-choice-num {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	background: color-mix(in oklab, var(--tm-accent) 22%, var(--tm-surface-3));
+	color: var(--tm-accent);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--tm-fs-label);
+	font-weight: 700;
+	margin-top: 1px;
+}
+
+.tavern-choice-text {
+	font-size: var(--tm-fs-body);
+	line-height: 1.55;
+	flex: 1;
+}
+
+/* ---------- Composer (#send_form) ---------- */
+
+body.tavern-mobile #send_form {
+	background: var(--tm-bg);
+	border-top: 1px solid var(--tm-rule);
+	padding: var(--tm-s-2) var(--tm-s-3) var(--tm-s-3);
+	gap: var(--tm-s-2);
+	border-radius: 0;
+}
+
+body.tavern-mobile #leftSendForm,
+body.tavern-mobile #rightSendForm {
+	gap: var(--tm-s-1);
+}
+
+body.tavern-mobile #send_textarea {
+	background: var(--tm-surface);
+	border: 1.5px solid var(--tm-rule);
+	border-radius: var(--tm-r-md);
+	color: var(--tm-ink);
+	font-family: var(--tm-body);
+	font-size: var(--tm-fs-body);
+	line-height: 1.5;
+	padding: 10px var(--tm-s-3);
+	min-height: var(--tm-h-std);
+	max-height: 140px;
+	resize: none;
+	transition: border-color var(--tm-dur) var(--tm-ease);
+}
+
+body.tavern-mobile #send_textarea:focus {
+	border-color: var(--tm-accent);
+	outline: none;
+}
+
+body.tavern-mobile #send_but,
+body.tavern-mobile #mes_stop {
+	width: var(--tm-h-std);
+	height: var(--tm-h-std);
+	border-radius: var(--tm-r-md);
+	border: none;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+body.tavern-mobile #send_but {
+	background: linear-gradient(180deg, var(--tm-accent) 0%,
+		color-mix(in oklab, var(--tm-accent) 86%, #000) 100%);
+	color: var(--tm-accent-ink);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+		inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+		0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Stop button — overlays send while generating */
+.tavern-stop {
+	position: fixed;
+	right: var(--tm-s-3);
+	bottom: var(--tm-s-3);
+	z-index: 1002;
+	width: var(--tm-h-std);
+	height: var(--tm-h-std);
+	border-radius: var(--tm-r-md);
+	background: linear-gradient(180deg, #c04444 0%, #8a2c2c 100%);
+	border: none;
+	color: #fff;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25),
+		inset 0 -2px 0 rgba(0, 0, 0, 0.25),
+		0 4px 12px rgba(192, 68, 68, 0.35);
+}
+
+.tavern-stop[hidden] {
+	display: none;
+}
+
+.tavern-stop-square {
+	width: 14px;
+	height: 14px;
+	background: #fff;
+	border-radius: 3px;
+}
+
+/* Restyle the bottom bar buttons (extensions, attachments) into chips */
+body.tavern-mobile #leftSendForm > div,
+body.tavern-mobile #rightSendForm > div {
+	width: var(--tm-h-std);
+	height: var(--tm-h-std);
+	border-radius: var(--tm-r-md);
+	background: transparent;
+	color: var(--tm-ink-2);
+}
+
+body.tavern-mobile #leftSendForm > div:hover,
+body.tavern-mobile #rightSendForm > div:hover {
+	background: var(--tm-surface-2);
+	color: var(--tm-ink);
+}
+
+/* Persona popouts and ST popups inherit AMOLED palette */
+body.tavern-mobile .popup,
+body.tavern-mobile .dialogue_popup {
+	background: var(--tm-surface);
+	color: var(--tm-ink);
+	border: 1px solid var(--tm-rule);
+	border-radius: var(--tm-r-lg);
+}
+
+/* ---------- Mobile-first breakpoints ---------- */
+
+@media (min-width: 720px) {
+	.tavern-menu-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	body.tavern-mobile #chat {
+		max-width: 720px;
+		margin: 0 auto;
+	}
+}
+
+@media (min-width: 1024px) {
+	.tavern-menu-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+
+	.tavern-modal-card {
+		max-height: 80vh;
+		border-radius: var(--tm-r-xl);
+		border: 1px solid var(--tm-rule-bright);
+		margin: auto;
+	}
+
+	.tavern-modal {
+		align-items: center;
+	}
+}
+
+/* Honour reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
+}

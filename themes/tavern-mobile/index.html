@@ -1,0 +1,71 @@
+<div id="tavern-mobile-container">
+    <!-- Top app bar: chat title + burger menu trigger -->
+    <header id="tavern-topbar" class="tavern-topbar" role="banner">
+        <button id="tavern-back" class="tavern-iconbtn" type="button" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 6l-6 6 6 6" />
+            </svg>
+        </button>
+        <div class="tavern-topbar-title">
+            <div id="tavern-title" class="tavern-title">conversation</div>
+            <div id="tavern-subtitle" class="tavern-subtitle"></div>
+        </div>
+        <button id="tavern-profile" class="tavern-iconbtn tavern-profile" type="button"
+            aria-label="Persona switcher">
+            <img id="tavern-profile-img" alt="" />
+        </button>
+        <button id="tavern-burger" class="tavern-iconbtn tavern-burger" type="button"
+            aria-label="Chat menu" aria-expanded="false">
+            <span class="tavern-burger-bars" aria-hidden="true">
+                <span></span><span></span><span></span>
+            </span>
+        </button>
+    </header>
+
+    <!-- Nested menu under topbar: feature-complete RP tools -->
+    <div id="tavern-menu" class="tavern-menu" role="menu" aria-hidden="true">
+        <div class="tavern-menu-grid"></div>
+    </div>
+
+    <!-- Stop button overlay; swaps with #send_but while generating -->
+    <button id="tavern-stop" class="tavern-stop" type="button" aria-label="Stop generating" hidden>
+        <span class="tavern-stop-square" aria-hidden="true"></span>
+    </button>
+
+    <!-- Settings modal: holds all ST drawers, like google-messages -->
+    <div id="tavern-settings-modal" class="tavern-modal" aria-hidden="true">
+        <div class="tavern-modal-card" role="dialog" aria-labelledby="tavern-settings-title">
+            <header class="tavern-modal-head">
+                <h2 id="tavern-settings-title" class="tavern-modal-title"
+                    data-i18n="SillyTavern Settings">SillyTavern Settings</h2>
+                <button id="tavern-settings-close" class="tavern-iconbtn" type="button"
+                    aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M5 5l14 14M19 5L5 19" />
+                    </svg>
+                </button>
+            </header>
+            <div class="tavern-modal-body">
+                <nav id="tavern-settings-tabs" class="tavern-settings-tabs"
+                    aria-label="Settings sections"></nav>
+                <section id="tavern-settings-pane" class="tavern-settings-pane"></section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Persona modal: drops below profile button -->
+    <div id="tavern-persona-modal" class="tavern-modal tavern-modal--anchor" aria-hidden="true">
+        <div class="tavern-modal-card tavern-modal-card--anchor" role="dialog"
+            aria-label="Switch persona">
+            <div class="tavern-persona-head">
+                <span class="tavern-eyebrow">Switch persona</span>
+            </div>
+            <ul id="tavern-persona-list" class="tavern-persona-list" role="listbox"></ul>
+            <button id="tavern-persona-manage" class="tavern-link-btn" type="button">
+                Manage personas…
+            </button>
+        </div>
+    </div>
+</div>
